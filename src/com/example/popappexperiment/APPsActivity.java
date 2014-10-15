@@ -1,0 +1,131 @@
+package com.example.popappexperiment;
+
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class APPsActivity extends Activity {
+	ListView lv;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_apps);
+
+		final String[] packageNames = new String[]{"com.google.android.youtube", "com.android.calculator2"};
+		String[] titles = new String[]{"Youtube", "Calculator"};
+		APPViewAdapter appViewAdapter = new APPViewAdapter (this, packageNames, titles);
+		lv = (ListView) findViewById(R.id.listview_apps);
+		lv.setAdapter(appViewAdapter);
+		lv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				launchApp(packageNames[position]);
+			}
+			
+		});
+
+	}
+	
+	protected void launchApp(String packageName) {
+    	Intent mIntent = getPackageManager().getLaunchIntentForPackage(packageName);
+    	if (mIntent != null) {
+    		try {
+    			startActivity(mIntent);
+    		} catch (ActivityNotFoundException err) {
+    			Toast t = Toast.makeText(getApplicationContext(),"APP NOT FOUND",Toast.LENGTH_SHORT);
+    			t.show();
+    		}
+    	}
+    }
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.apps, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	
+	class APPViewAdapter extends BaseAdapter {
+		
+		private Context mContext;
+		private String[] mPackageNames;
+		private String[] mTitles;
+
+		public APPViewAdapter(Context context, String[] packageNames, String[] titles) {
+			mContext = context;
+			mPackageNames = packageNames;
+			mTitles = titles;
+		}
+
+		@Override
+		public int getCount() {
+			return mPackageNames.length;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return mPackageNames[position];
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder holder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(mContext).inflate(
+						R.layout.listview_item_app, null);
+				holder = new ViewHolder(convertView);
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+
+			holder.mTitleTV.setText(mTitles[position]);
+			return convertView;
+		}
+
+		class ViewHolder {
+			ImageView mImageIV;
+			TextView mTitleTV;
+
+			ViewHolder(View view) {
+				mTitleTV = (TextView) view.findViewById(R.id.listview_item_title);
+				mImageIV = (ImageView) view.findViewById(R.id.listview_item_img);
+			}
+		}
+	}
+}
