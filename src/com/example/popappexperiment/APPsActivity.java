@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -80,11 +82,23 @@ public class APPsActivity extends Activity {
 		private Context mContext;
 		private String[] mPackageNames;
 		private String[] mTitles;
-
+		private Drawable[] mIcons;
+		
 		public APPViewAdapter(Context context, String[] packageNames, String[] titles) {
 			mContext = context;
 			mPackageNames = packageNames;
 			mTitles = titles;
+			
+			PackageManager pm = getPackageManager();
+			mIcons = new Drawable[titles.length];
+			for (int i = 0; i < mIcons.length ; i++) {
+				try {
+					mIcons[i] = pm.getApplicationIcon(packageNames[i]);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
 		}
 
 		@Override
@@ -114,7 +128,13 @@ public class APPsActivity extends Activity {
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			holder.mTitleTV.setText(mTitles[position]);
+			if (mTitles[position] != null) {
+				holder.mTitleTV.setText(mTitles[position]);
+			}
+			if (mIcons[position] != null) {
+				holder.mImageIV.setImageDrawable(mIcons[position]);
+			}
+			
 			return convertView;
 		}
 

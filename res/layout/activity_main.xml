@@ -15,24 +15,11 @@
         android:text="@string/hello_world" />
     -->
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-    	android:layout_height="match_parent">
-    	
-	    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PopAPP" />
-
     <Button
         android:id="@+id/btn_pop_APP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:text="View APPs" />
-    
-    </LinearLayout>
-    
 
 </RelativeLayout>
