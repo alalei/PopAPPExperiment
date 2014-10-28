@@ -5,16 +5,20 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,6 +46,20 @@ public class APPsActivity extends Activity {
 			}
 			
 		});
+		
+        Toast.makeText(getBaseContext(),"onCreate", Toast.LENGTH_LONG).show();
+        View mView = new Button(this);
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
+                0,
+//              WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+//                      | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                PixelFormat.TRANSLUCENT);
+        params.gravity = Gravity.RIGHT | Gravity.TOP;
+        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+        wm.addView(mView, params);
 
 	}
 	
@@ -75,6 +93,25 @@ public class APPsActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	/*
+	@Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+     
+        int mActivityWindowWidth = 200;
+        int mActivityWindowHeight = 200;
+        
+            final View view = getWindow().getDecorView();
+            final WindowManager.LayoutParams lp = (WindowManager.LayoutParams) view.getLayoutParams();
+     
+            lp.gravity = Gravity.CENTER;
+     
+            lp.width = mActivityWindowWidth;
+            lp.height = mActivityWindowHeight;
+            lp.type = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
+            getWindowManager().updateViewLayout(view, lp);
+    }*/
 	
 	
 	class APPViewAdapter extends BaseAdapter {

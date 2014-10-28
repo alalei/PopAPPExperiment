@@ -24,7 +24,8 @@
         </activity>
         <activity
             android:name=".APPsActivity"
-            android:label="@string/title_activity_apps" >
+            android:label="@string/title_activity_apps"
+            android:theme="@style/FloatTheme" >
         </activity>
     </application>
 
