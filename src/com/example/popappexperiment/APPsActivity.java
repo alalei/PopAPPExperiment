@@ -20,6 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,33 +47,34 @@ public class APPsActivity extends Activity {
 			}
 			
 		});
-		
-        Toast.makeText(getBaseContext(),"onCreate", Toast.LENGTH_LONG).show();
-        View mView = new Button(this);
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
-                0,
-//              WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-//                      | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.RIGHT | Gravity.TOP;
-        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-        wm.addView(mView, params);
 
 	}
-	
-	protected void launchApp(String packageName) {
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showCloseButton(false);
+    }
+
+    protected void launchApp(String packageName) {
     	Intent mIntent = getPackageManager().getLaunchIntentForPackage(packageName);
     	if (mIntent != null) {
     		try {
+                showCloseButton(true);
     			startActivity(mIntent);
     		} catch (ActivityNotFoundException err) {
     			Toast t = Toast.makeText(getApplicationContext(),"APP NOT FOUND",Toast.LENGTH_SHORT);
     			t.show();
     		}
     	}
+    }
+
+    private void showCloseButton(boolean visible) {
+        Intent intent = new Intent(this, CloseButtonService.class);
+        if (visible)
+            startService(intent);
+        else
+            stopService(intent);
     }
 
 	@Override
