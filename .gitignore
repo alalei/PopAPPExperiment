@@ -11,6 +11,7 @@
 # Generated files
 bin/
 gen/
+out/
 
 # Gradle files
 .gradle/
@@ -28,3 +29,7 @@ proguard/
 # Eclipse files
 .classpath
 .project
+
+# Android Studio files
+*.iml
+.idea/
