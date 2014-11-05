@@ -51,25 +51,22 @@ public class CloseButtonService extends Service implements View.OnClickListener 
         return null;
     }
     
-    @Override
-    public int onStartCommand (Intent intent, int flags, int startId) {
-    	launchedPackageName = intent.getStringExtra(EXTRA_APP_LAUNCHED_PACKAGE_NAME);
-    	Toast.makeText(getBaseContext(), "onStartCommand", Toast.LENGTH_LONG).show();
-		return startId;
-    }
+//    @Override
+//    public int onStartCommand (Intent intent, int flags, int startId) {
+//    	launchedPackageName = intent.getStringExtra(EXTRA_APP_LAUNCHED_PACKAGE_NAME);
+//    	Toast.makeText(getBaseContext(), "onStartCommand", Toast.LENGTH_LONG).show();
+//		return startId;
+//    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-//        mView = new LinearLayout(this);
-//        mView.setBackgroundColor(0x88ff0000); // The translucent red color
-        setFloatingWindow ();
+        showCloseButton();
     }
     
-    public void setFloatingWindow () {
-    	Toast t = Toast.makeText(getApplicationContext(),"setFloatingWindow",Toast.LENGTH_SHORT);
-    	t.show();
-    	
+    private void showCloseButton() {
+    	Toast.makeText(getApplicationContext(),"showCloseButton",Toast.LENGTH_SHORT).show();
+
     	LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mView = layoutInflater.inflate(R.layout.close_button, null);
         
@@ -85,14 +82,17 @@ public class CloseButtonService extends Service implements View.OnClickListener 
                 PixelFormat.TRANSLUCENT);
         params.gravity = Gravity.LEFT | Gravity.CENTER;
         WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-        // mView.findViewById(R.id.close_button).setOnClickListener(this);
         wm.addView (mView, params);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mView!=null){
+        hideCloseButton();
+    }
+
+    private void hideCloseButton() {
+        if(mView != null){
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
             wm.removeView(mView);
         }
@@ -100,11 +100,20 @@ public class CloseButtonService extends Service implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-    	Toast.makeText(getBaseContext(), "onClick", Toast.LENGTH_LONG).show();
+        if(view == closeButton) {
+        stopSelf();
+    	Toast.makeText(getBaseContext(), "Close Button Clicked", Toast.LENGTH_LONG).show();
 
+<<<<<<< HEAD
     	Intent shareIntent = new Intent(getBaseContext(), MainActivity.class);
     	shareIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     	shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     	startActivity(shareIntent);	
+=======
+    	Intent homeIntent = new Intent(getBaseContext(), MainActivity.class);
+    	homeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    	startActivity(homeIntent);
+        }
+>>>>>>> 96477f32bde69a7d164326e1593ea5e2a38faa8b
     }
 }
