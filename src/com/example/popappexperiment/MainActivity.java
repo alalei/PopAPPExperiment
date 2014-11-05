@@ -9,12 +9,10 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -34,15 +32,13 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View view) {
-				// getPackageInfo();
-				// Log.d(TAG,"Launch Activity :" + pm.getLaunchIntentForPackage(packageInfo.packageName));
-				// launchApp("com.google.android.youtube");
-				
 				Intent intent = new Intent(MainActivity.this, APPsActivity.class);
 				startActivity(intent);
 			}
  
 		});
+		
+		// View decorView = getWindow().getDecorView().setSystemUiVisibility();
     }
     
     protected void getPackageInfo() {

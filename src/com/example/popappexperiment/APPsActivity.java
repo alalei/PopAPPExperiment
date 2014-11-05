@@ -5,22 +5,17 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,20 +42,19 @@ public class APPsActivity extends Activity {
 			}
 			
 		});
-
 	}
 
     @Override
     protected void onResume() {
         super.onResume();
-        showCloseButton(false);
+        showCloseButton(false, null);
     }
 
     protected void launchApp(String packageName) {
     	Intent mIntent = getPackageManager().getLaunchIntentForPackage(packageName);
     	if (mIntent != null) {
     		try {
-                showCloseButton(true);
+    			showCloseButton(true, packageName);
     			startActivity(mIntent);
     		} catch (ActivityNotFoundException err) {
     			Toast t = Toast.makeText(getApplicationContext(),"APP NOT FOUND",Toast.LENGTH_SHORT);
@@ -69,12 +63,18 @@ public class APPsActivity extends Activity {
     	}
     }
 
-    private void showCloseButton(boolean visible) {
+    private void showCloseButton(boolean visible, String packageName) {
         Intent intent = new Intent(this, CloseButtonService.class);
-        if (visible)
-            startService(intent);
-        else
+        if (visible) {
+        	if (null != packageName) {
+        		intent.putExtra(CloseButtonService.EXTRA_APP_LAUNCHED_PACKAGE_NAME,packageName);
+        	}
+        	Toast t = Toast.makeText(getApplicationContext(),"showCloseButton:" + packageName,Toast.LENGTH_SHORT);
+            t.show();
+        	startService(intent);
+        } else {
             stopService(intent);
+        }
     }
 
 	@Override
