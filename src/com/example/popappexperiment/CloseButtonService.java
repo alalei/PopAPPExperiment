@@ -105,7 +105,6 @@ public class CloseButtonService extends Service implements View.OnClickListener 
     	Intent shareIntent = new Intent(getBaseContext(), MainActivity.class);
     	shareIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     	shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    	startActivity(shareIntent);
-    	
+    	startActivity(shareIntent);	
     }
 }
