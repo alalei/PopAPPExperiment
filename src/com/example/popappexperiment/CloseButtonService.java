@@ -1,62 +1,39 @@
 package com.example.popappexperiment;
 
-import java.util.List;
-
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningAppProcessInfo;
-import android.app.ActivityManager.RunningTaskInfo;
-import android.app.IntentService;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
 
-public class CloseButtonService extends Service implements View.OnClickListener {
+public class CloseButtonService extends Service implements View.OnClickListener, OnTouchListener {
 	public static final String EXTRA_APP_LAUNCHED_PACKAGE_NAME = "app_launched_package_name";
 	
 	View mView;
     Button closeButton;
     String launchedPackageName = null;
+    WindowManager.LayoutParams layoutParams = null;
     
-    /*
-    public CloseButtonService(String name) {
-		super(name);
-	}*/
-	/*
-	public CloseButtonService() {
-		super(CloseButtonService.class.getName());
-	}*/
-
-    /*
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		launchedPackageName = intent.getStringExtra(EXTRA_APP_LAUNCHED_PACKAGE_NAME);
-		if (null == mView) {
-			setFloatingWindow ();
-		}
-	}*/
+    // Params for moving button
+    int offTimeCount = 0;
+    boolean movable = false;
+	Rect rawRect = null;
 
     @Override
     public IBinder onBind(Intent i) {
         return null;
     }
-    
-//    @Override
-//    public int onStartCommand (Intent intent, int flags, int startId) {
-//    	launchedPackageName = intent.getStringExtra(EXTRA_APP_LAUNCHED_PACKAGE_NAME);
-//    	Toast.makeText(getBaseContext(), "onStartCommand", Toast.LENGTH_LONG).show();
-//		return startId;
-//    }
 
     @Override
     public void onCreate() {
@@ -72,17 +49,18 @@ public class CloseButtonService extends Service implements View.OnClickListener 
         
         closeButton = (Button) mView.findViewById(R.id.close_button);
         closeButton.setOnClickListener(this);
+        closeButton.setOnTouchListener(this);
         
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+        layoutParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 //2007, 8, -3);
                 WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.LEFT | Gravity.CENTER;
+        layoutParams.gravity = Gravity.LEFT | Gravity.CENTER;
         WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-        wm.addView (mView, params);
+        wm.addView (mView, layoutParams);
     }
 
     @Override
@@ -104,16 +82,67 @@ public class CloseButtonService extends Service implements View.OnClickListener 
         stopSelf();
     	Toast.makeText(getBaseContext(), "Close Button Clicked", Toast.LENGTH_LONG).show();
 
-<<<<<<< HEAD
-    	Intent shareIntent = new Intent(getBaseContext(), MainActivity.class);
-    	shareIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    	shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    	startActivity(shareIntent);	
-=======
     	Intent homeIntent = new Intent(getBaseContext(), MainActivity.class);
     	homeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
     	startActivity(homeIntent);
         }
->>>>>>> 96477f32bde69a7d164326e1593ea5e2a38faa8b
     }
+    
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		switch (event.getAction()) { // each action 0-4 ms
+		case MotionEvent.ACTION_DOWN: {
+			Log.d("Touch", "ACTION_DOWN");
+			movable = false;
+			rawRect = new Rect(mView.getLeft(), mView.getTop(), mView.getRight(), mView.getBottom());
+			break;
+		}
+		case MotionEvent.ACTION_MOVE: {
+			Log.d("Touch","ACTION_MOVE");
+			if (!movable) {
+				if (rawRect.contains((int)event.getX(), (int)event.getY())) {
+					return false;
+				} else {
+					movable = true;
+				}
+			}
+			
+			if (++offTimeCount%3 != 0) {
+				return false;
+			}
+			offTimeCount = 0;
+			int x = (int) event.getX();
+			int y = (int) event.getY();
+			moveButton(x, y);
+			return true;
+		}
+		case MotionEvent.ACTION_POINTER_UP: {
+			Log.d("Touch","ACTION_POINTER_UP");
+			break;
+		}
+		case MotionEvent.ACTION_UP: {
+			Log.d("Touch","ACTION_UP");
+			if (!movable) {
+				return false;
+			} else {
+				int x = (int) event.getX();
+				int y = (int) event.getY();
+				moveButton(x, y);
+				return true;
+			}
+		}
+		}
+		return false;
+	}
+	
+	private void moveButton(int relX, int relY) {
+		if (layoutParams == null) {
+			return;
+		}
+		layoutParams.x = layoutParams.x + relX;
+		layoutParams.y =  layoutParams.y + relY;
+		WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+		wm.updateViewLayout(mView, layoutParams);
+	}
+    
 }
