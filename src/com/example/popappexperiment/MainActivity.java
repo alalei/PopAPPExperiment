@@ -37,8 +37,6 @@ public class MainActivity extends Activity {
 			}
  
 		});
-		
-		// View decorView = getWindow().getDecorView().setSystemUiVisibility();
     }
     
     protected void getPackageInfo() {

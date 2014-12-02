@@ -18,7 +18,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class APPsActivity extends Activity {
 	ListView lv;
@@ -57,8 +56,8 @@ public class APPsActivity extends Activity {
     			showCloseButton(true, packageName);
     			startActivity(mIntent);
     		} catch (ActivityNotFoundException err) {
-    			Toast t = Toast.makeText(getApplicationContext(),"APP NOT FOUND",Toast.LENGTH_SHORT);
-    			t.show();
+    			// Toast t = Toast.makeText(getApplicationContext(),"APP NOT FOUND",Toast.LENGTH_SHORT);
+    			// t.show();
     		}
     	}
     }
@@ -69,8 +68,8 @@ public class APPsActivity extends Activity {
         	if (null != packageName) {
         		intent.putExtra(CloseButtonService.EXTRA_APP_LAUNCHED_PACKAGE_NAME,packageName);
         	}
-        	Toast t = Toast.makeText(getApplicationContext(),"showCloseButton:" + packageName,Toast.LENGTH_SHORT);
-            t.show();
+        	// Toast t = Toast.makeText(getApplicationContext(),"showCloseButton:" + packageName,Toast.LENGTH_SHORT);
+            // t.show();
         	startService(intent);
         } else {
             stopService(intent);
@@ -95,25 +94,6 @@ public class APPsActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	/*
-	@Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-     
-        int mActivityWindowWidth = 200;
-        int mActivityWindowHeight = 200;
-        
-            final View view = getWindow().getDecorView();
-            final WindowManager.LayoutParams lp = (WindowManager.LayoutParams) view.getLayoutParams();
-     
-            lp.gravity = Gravity.CENTER;
-     
-            lp.width = mActivityWindowWidth;
-            lp.height = mActivityWindowHeight;
-            lp.type = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
-            getWindowManager().updateViewLayout(view, lp);
-    }*/
 	
 	
 	class APPViewAdapter extends BaseAdapter {

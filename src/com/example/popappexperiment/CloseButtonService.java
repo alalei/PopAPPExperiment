@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
 
 
 public class CloseButtonService extends Service implements View.OnClickListener, OnTouchListener {
@@ -42,8 +41,7 @@ public class CloseButtonService extends Service implements View.OnClickListener,
     }
     
     private void showCloseButton() {
-    	Toast.makeText(getApplicationContext(),"showCloseButton",Toast.LENGTH_SHORT).show();
-
+    	// Toast.makeText(getApplicationContext(),"showCloseButton",Toast.LENGTH_SHORT).show();
     	LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mView = layoutInflater.inflate(R.layout.close_button, null);
         
@@ -54,7 +52,6 @@ public class CloseButtonService extends Service implements View.OnClickListener,
         layoutParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                //2007, 8, -3);
                 WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
@@ -79,12 +76,12 @@ public class CloseButtonService extends Service implements View.OnClickListener,
     @Override
     public void onClick(View view) {
         if(view == closeButton) {
-        stopSelf();
-    	Toast.makeText(getBaseContext(), "Close Button Clicked", Toast.LENGTH_LONG).show();
+        	stopSelf();
+        	// Toast.makeText(getBaseContext(), "Close Button Clicked", Toast.LENGTH_LONG).show();
 
-    	Intent homeIntent = new Intent(getBaseContext(), MainActivity.class);
-    	homeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    	startActivity(homeIntent);
+        	Intent homeIntent = new Intent(getBaseContext(), MainActivity.class);
+        	homeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        	startActivity(homeIntent);
         }
     }
     
